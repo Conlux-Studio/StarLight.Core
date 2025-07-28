@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>2.0.5-Preview1</Version>
+        <Version>2.0.5-Preview2</Version>
         <Title>StarLight.Core</Title>
         <Authors>Ink Marks Studio</Authors>
         <Description>An efficient, modular, and versatile core for Minecraft launcher</Description>
@@ -20,8 +20,8 @@
         <PackageReleaseNotes>None</PackageReleaseNotes>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <AssemblyName>StarLight_Core</AssemblyName>
-        <AssemblyVersion>2.0.5.1</AssemblyVersion>
-        <FileVersion>2.0.5.1</FileVersion>
+        <AssemblyVersion>2.0.5.2</AssemblyVersion>
+        <FileVersion>2.0.5.2</FileVersion>
         <Copyright>Copyright (c) 2024 zhi-feng2008</Copyright>
         <LangVersion>latest</LangVersion>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>

@@ -243,7 +243,7 @@ public class ArgumentsBuildUtil
         {
             { "${auth_player_name}", BaseAccount.Name },
             { "${version_name}", $"\"{VersionId}\"" },
-            { "${assets_root}", Path.Combine(CurrentExecutingDirectory(Root), "assets") },
+            { "${assets_root}", $"\"{Path.Combine(CurrentExecutingDirectory(Root), "assets")}\"" },
             { "${assets_index_name}", coreInfo.Assets },
             { "${auth_uuid}", BaseAccount.Uuid.Replace("-", "") },
             { "${auth_access_token}", BaseAccount.AccessToken },
