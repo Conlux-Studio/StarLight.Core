@@ -8,13 +8,13 @@
 
 #### 一个高效, 模块化, 全能的我的世界启动器核心
 
-![Star](https://img.shields.io/github/stars/Ink-Marks-Studio/StarLight.Core?logo=github&label=Star&style=for-the-badge)
-![Forks](https://img.shields.io/github/forks/Ink-Marks-Studio/StarLight.Core?logo=github&label=Forks&style=for-the-badge)
+![Star](https://img.shields.io/github/stars/Conlux-Studio/StarLight.Core?logo=github&label=Star&style=for-the-badge)
+![Forks](https://img.shields.io/github/forks/Conlux-Studio/StarLight.Core?logo=github&label=Forks&style=for-the-badge)
 ![NugetVersion](https://img.shields.io/nuget/v/StarLight_Core?logo=nuget&label=Nuget包版本&style=for-the-badge)
 ![NugetDownload](https://img.shields.io/nuget/dt/StarLight_Core?logo=nuget&label=Nuget包下载量&style=for-the-badge)
-![Issues](https://img.shields.io/github/issues-closed/Ink-Marks-Studio/StarLight.Core?logo=github&label=Issues&style=for-the-badge)
-![PR](https://img.shields.io/github/issues-pr-closed/Ink-Marks-Studio/StarLight.Core?logo=github&label=Pull%20requests&style=for-the-badge)
-![License](https://img.shields.io/github/license/Ink-Marks-Studio/StarLight.Core?logo=github&label=开源协议&style=for-the-badge&color=ff7a35)
+![Issues](https://img.shields.io/github/issues-closed/Conlux-Studio/StarLight.Core?logo=github&label=Issues&style=for-the-badge)
+![PR](https://img.shields.io/github/issues-pr-closed/Conlux-Studio/StarLight.Core?logo=github&label=Pull%20requests&style=for-the-badge)
+![License](https://img.shields.io/github/license/Conlux-Studio/StarLight.Core?logo=github&label=开源协议&style=for-the-badge&color=ff7a35)
 
 ![Alt](https://repobeats.axiom.co/api/embed/ba6e9977d1c23baebac22caa8629dc6f2ae14dd9.svg "Repobeats analytics image")
 
@@ -130,7 +130,7 @@ dotnet add package StarLight_Core
 
 a. 在 [Nuget](https://www.nuget.org/packages/StarLight_Core) 中下载
 
-b. 在 [Github Packages](https://github.com/orgs/Ink-Marks-Studio/packages?repo_name=StarLight.Core) 中下载
+b. 在 [Github Packages](https://github.com/orgs/Conlux-Studio/packages?repo_name=StarLight.Core) 中下载
 
 ### 3.添加需要的引用
 
@@ -241,7 +241,7 @@ void GetMicrosoftAccount()
 
 [StarLight-启动器开发交流群](https://qm.qq.com/q/FcmJDYRoDQ)
 
-如有问题或新功能建议, 请提交 [Issue](https://github.com/Ink-Marks-Studio/StarLight.Core/issues)
+如有问题或新功能建议, 请提交 [Issue](https://github.com/Conlux-Studio/StarLight.Core/issues)
 
 有其他需要可以加入Q群或发送邮箱至
-[StarLight@InkMarks.Studio](mailto:starlight@inkmarks.studio)
+[Official@Conlux.Studio](mailto:official@conlux.studio)

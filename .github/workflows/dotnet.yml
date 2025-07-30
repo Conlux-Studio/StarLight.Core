@@ -81,7 +81,7 @@ jobs:
       - name: 检查版本
         run: echo "VERSION=${{ env.VERSION }}"
       - name: 推送至 Github NuGet
-        run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" --source "https://nuget.pkg.github.com/Ink-Marks-Studio/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet nuget push "D:\a\StarLight.Core\StarLight.Core\nupkg\*.nupkg" --source "https://nuget.pkg.github.com/Conlux-Studio/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 推送至 NuGet.org

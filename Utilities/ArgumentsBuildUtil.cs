@@ -9,6 +9,9 @@ namespace StarLight_Core.Utilities;
 
 public class ArgumentsBuildUtil
 {
+    // 缓存字典
+    private readonly Dictionary<string, (string Version, string Path)> _libraryCache = new();
+    
     private readonly string jarPath;
 
     private string userType;
@@ -318,9 +321,9 @@ public class ArgumentsBuildUtil
 
             if (inheritFromPath != null)
                 cps.AddRange(ProcessLibraryPath(inheritFromPath, librariesPath));
-
             cps.AddRange(ProcessLibraryPath(versionPath, librariesPath));
             cps.Add(jarPath);
+            _libraryCache.Clear();
 
             return string.Join(";", cps);
         }
@@ -344,46 +347,137 @@ public class ArgumentsBuildUtil
 
         return string.Join(" ", args);
     }
+    
+    // 版本比较方法
+    private static int CompareVersions(string v1, string v2)
+    {
+        if (v1 == v2) return 0;
 
+        var parts1 = v1.Split('.', '-');
+        var parts2 = v2.Split('.', '-');
+        var maxLen = Math.Max(parts1.Length, parts2.Length);
+
+        for (int i = 0; i < maxLen; i++)
+        {
+            var p1 = i < parts1.Length ? parts1[i] : "0";
+            var p2 = i < parts2.Length ? parts2[i] : "0";
+
+            // 尝试解析为数字比较
+            if (!int.TryParse(p1, out var n1) || !int.TryParse(p2, out var n2)) continue;
+            if (n1 != n2) return n1.CompareTo(n2);
+            // 数字和字符串比较
+            if (int.TryParse(p1, out n1))
+                return 1; // v1 > v2
+            if (int.TryParse(p2, out n2))
+                return -1; // v1 < v2
+            // 纯字符串比较
+            var cmp = string.Compare(p1, p2, StringComparison.OrdinalIgnoreCase);
+            if (cmp != 0) return cmp;
+        }
+        return 0;
+    }
+    
     private IEnumerable<string> ProcessLibraryPath(string filePath, string librariesPath)
     {
         var jsonData = File.ReadAllText(filePath);
         var argsLibraries = JsonSerializer.Deserialize<ArgsBuildLibraryJson>(jsonData);
 
-        var optifinePaths = new List<string>();
-        var normalPaths = new List<string>();
+        // 分开收集普通库和Optifine库
+        var normalResults = new List<string>();
+        var optifineResults = new List<string>();
 
         foreach (var lib in argsLibraries.Libraries)
         {
             if (lib == null) continue;
 
-            if (lib.Downloads == null)
+            // 处理平台相关库
+            bool isPlatformSpecific = false;
+            string[] nameSegments = null;
+            
+            if (!string.IsNullOrEmpty(lib.Name))
             {
-                var path = BuildFromName(lib.Name, librariesPath);
-                if (path != null)
+                nameSegments = lib.Name.Split(':');
+                isPlatformSpecific = nameSegments.Length >= 4;
+            }
+
+            // 平台规则检查
+            if (lib.Downloads != null)
+            {
+                switch (isPlatformSpecific)
                 {
-                    if (lib.Name.StartsWith("optifine", StringComparison.OrdinalIgnoreCase))
-                        optifinePaths.Add(path);
-                    else
-                        normalPaths.Add(path);
+                    case true when !FileUtil.ShouldIncludeLibrary(lib.Rule):
+                    case false when 
+                        lib.Downloads.Classifiers != null && 
+                        lib.Downloads.Classifiers.Count != 0:
+                        continue;
                 }
+            }
+            else
+            {
+                if (isPlatformSpecific && !FileUtil.ShouldIncludeLibrary(lib.Rule))
+                {
+                    continue;
+                }
+            }
+            
+            var buildPath = BuildFromName(lib.Name, librariesPath);
+            if (string.IsNullOrEmpty(buildPath)) continue;
+            
+            if (isPlatformSpecific)
+            {
+                if (lib.Name.StartsWith("optifine", StringComparison.OrdinalIgnoreCase))
+                    optifineResults.Add(buildPath);
+                else
+                    normalResults.Add(buildPath);
+                continue; // 跳过版本比较
+            }
+
+            // 版本比较
+            var parts = nameSegments ?? lib.Name.Split(':');
+            
+            if (parts.Length < 3) // 确保是 group:artifact:version 格式
+            {
+                // 非标准格式直接添加
+                if (lib.Name.StartsWith("optifine", StringComparison.OrdinalIgnoreCase))
+                    optifineResults.Add(buildPath);
+                else
+                    normalResults.Add(buildPath);
                 continue;
             }
 
-            if (lib.Downloads.Classifiers != null && lib.Downloads.Classifiers.Count != 0) continue;
+            var groupId = parts[0];
+            var artifactId = parts[1];
+            var version = parts[2];
+            var libraryKey = $"{groupId}:{artifactId}";
+            var isOptifine = lib.Name.StartsWith("optifine", StringComparison.OrdinalIgnoreCase);
 
-            if (!FileUtil.ShouldIncludeLibrary(lib.Rule)) continue;
-
-            var buildPath = BuildFromName(lib.Name, librariesPath);
-            if (buildPath == null) continue;
-
-            if (lib.Name.StartsWith("optifine", StringComparison.OrdinalIgnoreCase))
-                optifinePaths.Add(buildPath);
+            if (_libraryCache.TryGetValue(libraryKey, out var cached))
+            {
+                if (CompareVersions(version, cached.Version) <= 0) continue;
+                _libraryCache[libraryKey] = (version, buildPath);
+                    
+                // 从结果中移除旧版本
+                if (normalResults.Contains(cached.Path))
+                    normalResults.Remove(cached.Path);
+                if (optifineResults.Contains(cached.Path))
+                    optifineResults.Remove(cached.Path);
+                
+                if (isOptifine)
+                    optifineResults.Add(buildPath);
+                else
+                    normalResults.Add(buildPath);
+            }
             else
-                normalPaths.Add(buildPath);
+            {
+                _libraryCache.Add(libraryKey, (version, buildPath));
+                if (isOptifine)
+                    optifineResults.Add(buildPath);
+                else
+                    normalResults.Add(buildPath);
+            }
         }
-
-        return normalPaths.Concat(optifinePaths);
+        
+        return normalResults.Concat(optifineResults);
     }
 
     private static bool ElementContainsRules(JsonElement element)

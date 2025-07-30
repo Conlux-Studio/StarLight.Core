@@ -8,13 +8,13 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>2.0.5-Preview2</Version>
         <Title>StarLight.Core</Title>
-        <Authors>Ink Marks Studio</Authors>
+        <Authors>Conlux Studio</Authors>
         <Description>An efficient, modular, and versatile core for Minecraft launcher</Description>
-        <PackageProjectUrl>https://github.com/Ink-Marks-Studio/StarLight.Core</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/Conlux-Studio/StarLight.Core</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageIcon>logo.png</PackageIcon>
-        <RepositoryUrl>https://github.com/Ink-Marks-Studio/StarLight.Core.git</RepositoryUrl>
+        <RepositoryUrl>https://github.com/Conlux-Studio/StarLight.Core.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>Minecraft</PackageTags>
         <PackageReleaseNotes>None</PackageReleaseNotes>
@@ -22,7 +22,7 @@
         <AssemblyName>StarLight_Core</AssemblyName>
         <AssemblyVersion>2.0.5.2</AssemblyVersion>
         <FileVersion>2.0.5.2</FileVersion>
-        <Copyright>Copyright (c) 2024 zhi-feng2008</Copyright>
+        <Copyright>Copyright (c) 2025 Conlux Studio and Contributor</Copyright>
         <LangVersion>latest</LangVersion>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>
