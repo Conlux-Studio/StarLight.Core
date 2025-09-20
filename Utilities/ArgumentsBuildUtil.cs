@@ -208,7 +208,7 @@ public class ArgumentsBuildUtil
             var downloader = new MultiFileDownloader();
             await downloader.DownloadFiles(new List<DownloadItem>
             {
-                new("http://cdn.hjdczy.top/starlight.core/launch_wrapper.jar", wrapperPath)
+                new("https://vip.123pan.cn/1816849772/starlight.core/launch_wrapper.jar", wrapperPath)
             });
             args.Add($"-Doolloo.jlw.tmpdir=\"{tempPath}\" -jar \"{wrapperPath}\"");
         }

@@ -220,7 +220,7 @@ public class MicrosoftAuthentication
 
         // Minecraft 身份验证
         action("正在获取 Minecraft 账户信息");
-        var url = "https://api.minecraftservices.com/authentication/login_with_xbox";
+        const string url = "https://api.minecraftservices.com/authentication/login_with_xbox";
         var accountResponseData = new
         {
             identityToken = $"XBL3.0 x={userHash};{xstsToken}"
