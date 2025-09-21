@@ -389,6 +389,10 @@ public class ArgumentsBuildUtil
         foreach (var lib in argsLibraries.Libraries)
         {
             if (lib == null) continue;
+            
+            // 统一规则检查
+            if (!FileUtil.ShouldIncludeLibrary(lib.Rule))
+                continue;
 
             // 处理平台相关库
             bool isPlatformSpecific = false;
@@ -400,21 +404,13 @@ public class ArgumentsBuildUtil
                 isPlatformSpecific = nameSegments.Length >= 4;
             }
 
-            // 平台规则检查
+            // 平台特定检查
             if (lib.Downloads != null)
             {
-                switch (isPlatformSpecific)
-                {
-                    case true when !FileUtil.ShouldIncludeLibrary(lib.Rule):
-                    case false when 
-                        lib.Downloads.Classifiers != null && 
-                        lib.Downloads.Classifiers.Count != 0:
-                        continue;
-                }
-            }
-            else
-            {
-                if (isPlatformSpecific && !FileUtil.ShouldIncludeLibrary(lib.Rule))
+                // 只保留对 classifiers 的检查
+                if (!isPlatformSpecific && 
+                    lib.Downloads.Classifiers != null && 
+                    lib.Downloads.Classifiers.Count != 0)
                 {
                     continue;
                 }
