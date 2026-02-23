@@ -22,7 +22,7 @@
         <AssemblyName>StarLight_Core</AssemblyName>
         <AssemblyVersion>2.0.5.5</AssemblyVersion>
         <FileVersion>2.0.5.5</FileVersion>
-        <Copyright>Copyright (c) 2025 Conlux Studio and Contributor</Copyright>
+        <Copyright>Copyright (c) 2026 Conlux Studio and Contributor</Copyright>
         <LangVersion>latest</LangVersion>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>
