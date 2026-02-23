@@ -78,7 +78,7 @@
 
 ## 📘 Documentation and Usage Guide
 
-Documentation: [StarLight_Core Documentation and Help](https://mohen.wiki/)
+Documentation: [StarLight_Core Documentation and Help](https://wiki.conlux.studio/)
 
 > [!TIP]
 > This also serves as a reference guide for documentation contributors.
@@ -153,7 +153,7 @@ var account = new OfflineAuthentication("Steve").OfflineAuth();
 ```
 
 > [!NOTE]
-> For more authenticators, refer to the [Documentation](https://mohen.wiki/) - Authenticators section.
+> For more authenticators, refer to the [Documentation](https://wiki.conlux.studio/) - Authenticators section.
 
 ### 6. Launch Game
 
@@ -180,12 +180,12 @@ var la = await launch.LaunchAsync(ReportProgress); // Launch
 ```
 
 > [!NOTE]
-> For more launch configurations and error handling, refer to the [Documentation](https://mohen.wiki/) - Launcher
+> For more launch configurations and error handling, refer to the [Documentation](https://wiki.conlux.studio/) - Launcher
 > section.
 
 ### 7. More Components
 
-Refer to the [StarLight_Core Documentation and Help](https://mohen.wiki/) for tutorials on using other components.
+Refer to the [StarLight_Core Documentation and Help](https://wiki.conlux.studio/) for tutorials on using other components.
 
 ## 🌐 Discussion
 

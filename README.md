@@ -77,7 +77,7 @@
 
 ## 📘文档与使用指南
 
-文档: [StarLight_Core 使用文档与使用帮助](https://mohen.wiki/)
+文档: [StarLight_Core 使用文档与使用帮助](https://wiki.conlux.studio/)
 
 > [!TIP]
 > 这也是一份给文档贡献者的编写参考指南
@@ -157,7 +157,7 @@ var account = new OfflineAuthentication("Steve").OfflineAuth();
 ```
 
 > [!NOTE]
-> 更多验证器请查看 [文档](https://mohen.wiki/)-验证器 部分
+> 更多验证器请查看 [文档](https://wiki.conlux.studio/)-验证器 部分
 
 ### 6.启动游戏
 
@@ -184,11 +184,11 @@ var la = await launch.LaunchAsync(ReportProgress); // 启动
 ```
 
 > [!NOTE]
-> 更多启动配置以及错误处理请查看 [文档](https://mohen.wiki/)-启动器 部分
+> 更多启动配置以及错误处理请查看 [文档](https://wiki.conlux.studio/)-启动器 部分
 
 ### 7.更多组件
 
-在文档 [StarLight_Core 使用文档与使用帮助](https://mohen.wiki/)
+在文档 [StarLight_Core 使用文档与使用帮助](https://wiki.conlux.studio/)
 中查看更多组件的使用教程
 
 ## 🧱问题解决方案
