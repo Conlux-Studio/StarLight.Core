@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Reflection;
 using StarLight_Core.Downloader;
 using StarLight_Core.Models;
 using StarLight_Core.Models.Authentication;
@@ -199,19 +200,16 @@ public class ArgumentsBuildUtil
         FileUtil.IsDirectory(appDataPath, true);
         FileUtil.IsDirectory(tempPath, true);
 
-        if (FileUtil.IsFile(wrapperPath))
+        if (!FileUtil.IsFile(wrapperPath))
         {
-            args.Add($"-Doolloo.jlw.tmpdir=\"{tempPath}\" -jar \"{wrapperPath}\"");
+            var assembly = Assembly.GetExecutingAssembly();
+            string wrapper = "StarLight_Core.Assets.launch_wrapper.jar";
+            using Stream stream = assembly.GetManifestResourceStream(wrapper);
+            byte[] buffer = new byte[stream.Length];
+            stream.Read(buffer, 0, buffer.Length);
+            await File.WriteAllBytesAsync(wrapperPath, buffer);
         }
-        else
-        {
-            var downloader = new MultiFileDownloader();
-            await downloader.DownloadFiles(new List<DownloadItem>
-            {
-                new("https://vip.123pan.cn/1816849772/starlight.core/launch_wrapper.jar", wrapperPath)
-            });
-            args.Add($"-Doolloo.jlw.tmpdir=\"{tempPath}\" -jar \"{wrapperPath}\"");
-        }
+        args.Add($"-Doolloo.jlw.tmpdir=\"{tempPath}\" -jar \"{wrapperPath}\"");
 
         args.Add(coreInfo.MainClass);
 
