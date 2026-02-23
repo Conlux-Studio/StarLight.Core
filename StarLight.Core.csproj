@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <RootNamespace>StarLight_Core</RootNamespace>
@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>2.0.5-Preview4</Version>
+        <Version>2.0.5-Preview5</Version>
         <Title>StarLight.Core</Title>
         <Authors>Conlux Studio</Authors>
         <Description>An efficient, modular, and versatile core for Minecraft launcher</Description>
@@ -20,8 +20,8 @@
         <PackageReleaseNotes>None</PackageReleaseNotes>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <AssemblyName>StarLight_Core</AssemblyName>
-        <AssemblyVersion>2.0.5.4</AssemblyVersion>
-        <FileVersion>2.0.5.4</FileVersion>
+        <AssemblyVersion>2.0.5.5</AssemblyVersion>
+        <FileVersion>2.0.5.5</FileVersion>
         <Copyright>Copyright (c) 2025 Conlux Studio and Contributor</Copyright>
         <LangVersion>latest</LangVersion>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -63,7 +63,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Drawing.Common" Version="8.0.7"/>
+        <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
     </ItemGroup>
 
 </Project>
