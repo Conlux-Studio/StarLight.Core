@@ -52,6 +52,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Assets\launch_wrapper.jar" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Assets\launch_wrapper.jar" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Include="README.md">
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
