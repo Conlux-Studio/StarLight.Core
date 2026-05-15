@@ -8,35 +8,45 @@ using StarLight_Core.Models.Utilities;
 
 namespace StarLight_Core.Utilities;
 
+/// <summary>
+/// 参数构建工具类
+/// </summary>
 public class ArgumentsBuildUtil
 {
     // 缓存字典
     private readonly Dictionary<string, (string Version, string Path)> _libraryCache = new();
     
-    private readonly string jarPath;
+    private readonly string _jarPath;
 
-    private string userType;
+    private string _userType;
 
+    /// <summary>
+    /// 参数构建工具类构造函数
+    /// </summary>
+    /// <param name="gameWindowConfig">游戏窗口参数</param>
+    /// <param name="gameCoreConfig">游戏核心参数</param>
+    /// <param name="javaConfig">Java 参数</param>
+    /// <param name="accountInfo">账户信息</param>
     public ArgumentsBuildUtil(GameWindowConfig gameWindowConfig, GameCoreConfig gameCoreConfig, JavaConfig javaConfig,
-        BaseAccount baseAccount)
+        BaseAccount accountInfo)
     {
         GameWindowConfig = gameWindowConfig;
         GameCoreConfig = gameCoreConfig;
         JavaConfig = javaConfig;
-        BaseAccount = baseAccount;
+        AccountInfo = accountInfo;
         VersionId = gameCoreConfig.Version;
         Root = FileUtil.IsAbsolutePath(gameCoreConfig.Root)
             ? Path.Combine(gameCoreConfig.Root)
             : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), gameCoreConfig.Root);
-        userType = "Mojang";
-        jarPath = GetVersionJarPath();
+        _userType = "Mojang";
+        _jarPath = GetVersionJarPath();
     }
 
     public string VersionId { get; set; }
 
     public string Root { get; set; }
 
-    public BaseAccount BaseAccount { get; set; }
+    public BaseAccount AccountInfo { get; set; }
 
     public GameWindowConfig GameWindowConfig { get; set; }
 
@@ -45,7 +55,10 @@ public class ArgumentsBuildUtil
     public JavaConfig JavaConfig { get; set; }
 
     // TODO: -Dfabric.log.level=DEBUG
-    // 参数构建器
+    /// <summary>
+    /// 参数构建器
+    /// </summary>
+    /// <returns></returns>
     public async Task<List<string>> Build()
     {
         var arguments = new List<string>();
@@ -82,7 +95,7 @@ public class ArgumentsBuildUtil
         var appDataPath = Path.Combine(FileUtil.GetAppDataPath(), "StarLight.Core", "jar");
         var tempPath = Path.Combine(FileUtil.GetAppDataPath(), "StarLight.Core", "temp");
         
-        switch (BaseAccount)
+        switch (AccountInfo)
         {
             case UnifiedPassAccount:
             {
@@ -218,7 +231,7 @@ public class ArgumentsBuildUtil
 
     private string BuildClientJarArgs()
     {
-        return "-Dminecraft.client.jar=" + $"\"{jarPath}\"";
+        return "-Dminecraft.client.jar=" + $"\"{_jarPath}\"";
     }
 
     // 系统参数
@@ -242,15 +255,15 @@ public class ArgumentsBuildUtil
 
         var gamePlaceholders = new Dictionary<string, string>
         {
-            { "${auth_player_name}", BaseAccount.Name },
+            { "${auth_player_name}", AccountInfo.Name },
             { "${version_name}", $"\"{VersionId}\"" },
             { "${assets_root}", $"\"{Path.Combine(CurrentExecutingDirectory(Root), "assets")}\"" },
             { "${assets_index_name}", coreInfo.Assets },
-            { "${auth_uuid}", BaseAccount.Uuid.Replace("-", "") },
-            { "${auth_access_token}", BaseAccount.AccessToken },
+            { "${auth_uuid}", AccountInfo.Uuid.Replace("-", "") },
+            { "${auth_access_token}", AccountInfo.AccessToken },
             { "${clientid}", "${clientid}" },
             { "${auth_xuid}", "${auth_xuid}" },
-            { "${user_type}", userType },
+            { "${user_type}", _userType },
             { "${version_type}", $"\"SL/{TextUtil.ToTitleCase(coreInfo.Type)}\"" },
             { "${user_properties}", "{}" }
         };
@@ -320,7 +333,7 @@ public class ArgumentsBuildUtil
             if (inheritFromPath != null)
                 cps.AddRange(ProcessLibraryPath(inheritFromPath, librariesPath));
             cps.AddRange(ProcessLibraryPath(versionPath, librariesPath));
-            cps.Add(jarPath);
+            cps.Add(_jarPath);
             _libraryCache.Clear();
 
             return string.Join(";", cps);
@@ -557,7 +570,7 @@ public class ArgumentsBuildUtil
         : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), Root);
 
     // 判断账户
-    private void ProcessAccount() => userType = BaseAccount is MicrosoftAccount ? "msa" : "Mojang";
+    private void ProcessAccount() => _userType = AccountInfo is MicrosoftAccount ? "msa" : "Mojang";
 
     // 获取版本 Jar 实际路径
     private string GetVersionJarPath()
