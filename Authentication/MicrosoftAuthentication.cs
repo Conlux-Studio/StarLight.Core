@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using StarLight_Core.Models.Authentication;
@@ -7,6 +8,7 @@ using StarLight_Core.Utilities;
 #pragma warning disable CA1822
 namespace StarLight_Core.Authentication;
 
+// TODO: 发生异常时输出请求返回内容
 /// <summary>
 /// 微软验证类
 /// </summary>
