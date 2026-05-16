@@ -1,4 +1,6 @@
-﻿namespace StarLight_Core.Models;
+﻿using StarLight_Core.Enum;
+
+namespace StarLight_Core.Models;
 
 /// <summary>
 /// 核心版本信息
@@ -11,7 +13,7 @@ public static class StarLightInfo
     public const string Version = "2.0.5";
 
     /// <summary>
-    /// 类型 Preview / Release
+    /// 版本类型
     /// </summary>
-    public const string Type = "Preview";
+    public const StarlightCoreType Type = StarlightCoreType.Preview;
 }
