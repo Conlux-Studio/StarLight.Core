@@ -12,7 +12,7 @@ namespace StarLight_Core.Authentication;
 /// <summary>
 /// 微软验证类
 /// </summary>
-/// <a href="https://mohen.wiki/Authentication/Microsoft.html">查看文档</a>
+/// <a href="https://wiki.conlux.studio/Authentication/Microsoft.html">查看文档</a>
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 [SuppressMessage("ReSharper", "MemberCanBeMadeStatic.Global")]
 public class MicrosoftAuthentication
@@ -21,7 +21,7 @@ public class MicrosoftAuthentication
     /// 微软验证器
     /// </summary>
     /// <param name="clientId">客户端令牌</param>
-    /// <a href="https://mohen.wiki/Authentication/Microsoft.html#构造函数">查看文档</a>
+    /// <a href="https://wiki.conlux.studio/Authentication/Microsoft.html#构造函数">查看文档</a>
     public MicrosoftAuthentication(string clientId)
     {
         ClientId = clientId;
@@ -32,7 +32,7 @@ public class MicrosoftAuthentication
     /// <summary>
     /// 客户端令牌
     /// </summary>
-    /// <a href="https://mohen.wiki/Authentication/Microsoft.html#构造函数">查看文档</a>
+    /// <a href="https://wiki.conlux.studio/Authentication/Microsoft.html#构造函数">查看文档</a>
     public string ClientId { get; init; }
 
     /// <summary>
@@ -40,7 +40,7 @@ public class MicrosoftAuthentication
     /// </summary>
     /// <returns>设备代码信息</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    /// <a href="https://mohen.wiki/Authentication/Microsoft.html#retrievedevicecodeinfo-获取设备代码">查看文档</a>
+    /// <a href="https://wiki.conlux.studio/Authentication/Microsoft.html#retrievedevicecodeinfo-获取设备代码">查看文档</a>
     public async ValueTask<RetrieveDeviceCode> RetrieveDeviceCodeInfo()
     {
         if (string.IsNullOrEmpty(ClientId))
@@ -70,7 +70,7 @@ public class MicrosoftAuthentication
     /// <returns>令牌信息</returns>
     /// <param name="deviceCodeInfo"></param>
     /// <exception cref="TimeoutException"></exception>
-    /// <a href="https://mohen.wiki/Authentication/Microsoft.html#gettokenresponse-轮询获取-token">查看文档</a>
+    /// <a href="https://wiki.conlux.studio/Authentication/Microsoft.html#gettokenresponse-轮询获取-token">查看文档</a>
     public async ValueTask<GetTokenResponse> GetTokenResponse(RetrieveDeviceCode deviceCodeInfo)
     {
         using var client = new HttpClient();
@@ -119,7 +119,7 @@ public class MicrosoftAuthentication
     /// <param name="action"></param>
     /// <param name="refreshToken"></param>
     /// <exception cref="Exception"></exception>
-    /// <a href="https://mohen.wiki/Authentication/Microsoft.html#microsoftauthasync-异步验证方法">查看文档</a>
+    /// <a href="https://wiki.conlux.studio/Authentication/Microsoft.html#microsoftauthasync-异步验证方法">查看文档</a>
     public async ValueTask<MicrosoftAccount> MicrosoftAuthAsync(GetTokenResponse tokenInfo, Action<string> action,
         string? refreshToken = null)
     {

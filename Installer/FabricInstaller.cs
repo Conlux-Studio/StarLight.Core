@@ -10,7 +10,7 @@ namespace StarLight_Core.Installer;
 /// <summary>
 /// Fabric 安装器
 /// </summary>
-/// <a href="https://mohen.wiki/Installer/Fabric.html">查看文档</a>
+/// <a href="https://wiki.conlux.studio/Installer/Fabric.html">查看文档</a>
 public class FabricInstaller : InstallerBase
 {
     /// <summary>
@@ -22,7 +22,7 @@ public class FabricInstaller : InstallerBase
     /// <param name="onSpeedChanged">速度报告</param>
     /// <param name="onProgressChanged">进度报告</param>
     /// <param name="cancellationToken">取消令牌</param>
-    /// <a href="https://mohen.wiki/Installer/Fabric.html">查看文档</a>
+    /// <a href="https://wiki.conlux.studio/Installer/Fabric.html">查看文档</a>
     public FabricInstaller(string gameVersion, string fabricVersion, string root = ".minecraft",
         Action<string>? onSpeedChanged = null, Action<string, int>? onProgressChanged = null,
         CancellationToken cancellationToken = default)
@@ -43,7 +43,7 @@ public class FabricInstaller : InstallerBase
     /// <param name="gameVersion">游戏版本</param>
     /// <param name="fabricVersion">Fabric 版本</param>
     /// <param name="cancellationToken">取消令牌</param>
-    /// <a href="https://mohen.wiki/Installer/Fabric.html">查看文档</a>
+    /// <a href="https://wiki.conlux.studio/Installer/Fabric.html">查看文档</a>
     public FabricInstaller(string gameVersion, string fabricVersion, CancellationToken cancellationToken = default)
     {
         GameVersion = gameVersion;
@@ -62,7 +62,7 @@ public class FabricInstaller : InstallerBase
     /// 异步安装方法
     /// </summary>
     /// <param name="customId">自定义版本名称</param>
-    /// <a href="https://mohen.wiki/Installer/Fabric.html#installasync-异步安装">查看文档</a>
+    /// <a href="https://wiki.conlux.studio/Installer/Fabric.html#installasync-异步安装">查看文档</a>
     /// <returns></returns>
     public async Task<FabricInstallResult> InstallAsync(string? customId = null)
     {

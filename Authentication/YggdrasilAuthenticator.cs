@@ -7,9 +7,38 @@ namespace StarLight_Core.Authentication;
 /// <summary>
 /// 外置验证类
 /// </summary>
-/// <a href="https://mohen.wiki/Authentication/Yggdrasil.html">查看文档</a>
+/// <a href="https://wiki.conlux.studio/Authentication/Yggdrasil.html">查看文档</a>
 public class YggdrasilAuthenticator : BaseAuthentication
 {
+    /// <summary>
+    /// 外置验证器
+    /// </summary>
+    /// <param name="email"></param>
+    /// <param name="password"></param>
+    /// <a href="https://wiki.conlux.studio/Authentication/Yggdrasil.html">查看文档</a>
+    public YggdrasilAuthenticator(string email, string password)
+    {
+        Url = "https://littleskin.cn/api/yggdrasil";
+        Email = email;
+        Password = password;
+        ClientToken = Guid.NewGuid().ToString("D");;
+    }
+    
+    /// <summary>
+    /// 外置验证器
+    /// </summary>
+    /// <param name="email"></param>
+    /// <param name="password"></param>
+    /// <param name="clientToken"></param>
+    /// <a href="https://wiki.conlux.studio/Authentication/Yggdrasil.html">查看文档</a>
+    public YggdrasilAuthenticator(string email, string password, string clientToken)
+    {
+        Url = "https://littleskin.cn/api/yggdrasil";
+        Email = email;
+        Password = password;
+        ClientToken = clientToken;
+    }
+    
     /// <summary>
     /// 外置验证器
     /// </summary>
@@ -17,29 +46,15 @@ public class YggdrasilAuthenticator : BaseAuthentication
     /// <param name="email"></param>
     /// <param name="password"></param>
     /// <param name="clientToken"></param>
-    /// <a href="https://mohen.wiki/Authentication/Yggdrasil.html">查看文档</a>
-    public YggdrasilAuthenticator(string url, string email, string password, string clientToken = "")
+    /// <a href="https://wiki.conlux.studio/Authentication/Yggdrasil.html">查看文档</a>
+    public YggdrasilAuthenticator(string url, string email, string password, string? clientToken = null)
     {
-        Url = Url == "LittleSkin" ? "https://littleskin.cn/api/yggdrasil" : url;
+        Url = url == "littleskin.cn" ? "https://littleskin.cn/api/yggdrasil" : url;
         Email = email;
         Password = password;
-        ClientToken = clientToken;
+        ClientToken = clientToken ?? Guid.NewGuid().ToString("D");
     }
-
-    /// <summary>
-    /// 外置验证器
-    /// </summary>
-    /// <param name="email"></param>
-    /// <param name="password"></param>
-    /// <param name="clientToken"></param>
-    /// <a href="https://mohen.wiki/Authentication/Yggdrasil.html">查看文档</a>
-    public YggdrasilAuthenticator(string email, string password, string clientToken = "")
-    {
-        Url = "https://littleskin.cn/api/yggdrasil";
-        Email = email;
-        Password = password;
-        ClientToken = clientToken;
-    }
+    
 
     private string Url { get; }
 
@@ -51,12 +66,12 @@ public class YggdrasilAuthenticator : BaseAuthentication
     /// 异步验证方法
     /// </summary>
     /// <returns></returns>
-    /// <a href="https://mohen.wiki/Authentication/Yggdrasil.html">查看文档</a>
+    /// <a href="https://wiki.conlux.studio/authentication/yggdrasil.html">查看文档</a>
     public async ValueTask<IEnumerable<YggdrasilAccount>> YggdrasilAuthAsync()
     {
         var requestJson = new
         {
-            clientToken = IsValidUuid(ClientToken) ? ClientToken : Guid.NewGuid().ToString("N"),
+            clientToken = IsValidUuid(ClientToken) ? ClientToken : Guid.NewGuid().ToString("D"),
             username = Email,
             password = Password,
             requestUser = false,
@@ -75,16 +90,19 @@ public class YggdrasilAuthenticator : BaseAuthentication
 
         var accountMessage = JsonSerializer.Deserialize<YggdrasilResponse>(postResponseContent);
 
-        return accountMessage.UserAccounts.Select(userAccount => new YggdrasilAccount
-            {
-                AccessToken = accountMessage.AccessToken,
-                ClientToken = accountMessage.ClientToken,
-                Name = userAccount.Name,
-                Uuid = Guid.Parse(userAccount.Uuid).ToString(),
-                ServerUrl = Url ?? string.Empty,
-                Email = Email ?? string.Empty,
-                Password = Password ?? string.Empty
-            })
-            .ToList();
+        if (accountMessage != null)
+            return accountMessage.UserAccounts.Select(userAccount => new YggdrasilAccount
+                {
+                    AccessToken = accountMessage.AccessToken,
+                    ClientToken = accountMessage.ClientToken,
+                    Name = userAccount.Name,
+                    Uuid = Guid.Parse(userAccount.Uuid).ToString(),
+                    ServerUrl = Url ?? string.Empty,
+                    Email = Email ?? string.Empty,
+                    Password = Password ?? string.Empty
+                })
+                .ToList();
+        // TODO: 错误处理机制
+        throw new InvalidOperationException();
     }
 }

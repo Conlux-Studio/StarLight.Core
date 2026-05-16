@@ -5,7 +5,7 @@ namespace StarLight_Core.Models.Authentication;
 /// <summary>
 /// 令牌信息
 /// </summary>
-/// <a href="https://mohen.wiki/Authentication/Microsoft.html#详细-gettokenresponse-定义">查看文档</a>
+/// <a href="https://wiki.conlux.studio/Authentication/Microsoft.html#详细-gettokenresponse-定义">查看文档</a>
 public class GetTokenResponse
 {
     /// <summary>

@@ -12,20 +12,14 @@ public abstract class BaseAuthentication
     /// <summary>
     /// 客户端令牌
     /// </summary>
-    public string ClientToken { get; set; } = string.Empty;
+    protected string ClientToken { get; set; } = string.Empty;
 
     /// <summary>
     /// 验证 Uuid 是否合法
     /// </summary>
     /// <param name="uuid"></param>
     /// <returns></returns>
-    protected static bool IsValidUuid(string uuid)
-    {
-        const string pattern = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
-        var regex = new Regex(pattern);
-
-        return regex.IsMatch(uuid);
-    }
+    protected static bool IsValidUuid(string uuid) => Guid.TryParseExact(uuid, "D", out _);
     
     /// <summary>
     /// 生成 UUID
@@ -40,7 +34,7 @@ public abstract class BaseAuthentication
         using var md5 = MD5.Create();
         var hashBytes = md5.ComputeHash(inputBytes);
 
-        // 根据 RFC 4122 生成 UUID
+        // RFC 4122
         hashBytes[6] &= 0x0f;
         hashBytes[6] |= 0x30;
         hashBytes[8] &= 0x3f;

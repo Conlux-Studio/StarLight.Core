@@ -2,6 +2,9 @@
 
 namespace StarLight_Core.Models.Authentication;
 
+/// <summary>
+/// 微软账户类
+/// </summary>
 public class MicrosoftAccount : BaseAccount
 {
     public override AuthType Type => AuthType.Microsoft;

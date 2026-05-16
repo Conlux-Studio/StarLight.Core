@@ -15,6 +15,7 @@ public static class ModrinthUtil
     /// <param name="count">获取数量</param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
+    /// <a href="https://wiki.conlux.studio/Utilities/Modrinth.html">查看文档</a>
     public static async Task<IEnumerable<ModrinthInfo>?> GetRandomMod(int count)
     {
         var options = new JsonSerializerOptions

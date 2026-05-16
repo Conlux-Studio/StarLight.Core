@@ -42,7 +42,7 @@ public class ArgumentsBuildUtil
         _jarPath = GetVersionJarPath();
     }
     
-    // TODO: 下个大版本私有
+    // TODO: 下个大版本改为私有 引入更好的错误处理机制
     public string VersionId { get; set; }
 
     public string Root { get; set; }
