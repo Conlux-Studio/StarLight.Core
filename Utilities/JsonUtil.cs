@@ -16,7 +16,7 @@ public static class JsonUtil
     };
 
     /// <summary>
-    /// 
+    /// JSON 序列化
     /// </summary>
     /// <param name="json"></param>
     /// <param name="jsonType"></param>
@@ -25,7 +25,7 @@ public static class JsonUtil
     public static T? Deserialize<T>(this string json, JsonTypeInfo<T?> jsonType) => JsonSerializer.Deserialize(json, jsonType);
 
     /// <summary>
-    /// 
+    /// JSON 反序列化
     /// </summary>
     /// <param name="json"></param>
     /// <param name="options"></param>

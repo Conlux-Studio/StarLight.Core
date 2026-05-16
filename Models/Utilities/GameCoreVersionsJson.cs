@@ -3,6 +3,7 @@ using StarLight_Core.Models.Installer;
 
 namespace StarLight_Core.Models.Utilities;
 
+#pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
 public class GameCoreVersionsJson
 {
     [JsonPropertyName("id")]
@@ -44,3 +45,4 @@ public class GameCoreVersionsJson
         MajorVersion = 8
     };
 }
+#pragma warning restore CS1591 // 缺少对公共可见类型或成员的 XML 注释

@@ -2,6 +2,9 @@
 
 namespace StarLight_Core.Models.Utilities;
 
+/// <summary>
+/// 游戏核心信息
+/// </summary>
 public class GameCoreInfo
 {
     public string Id { get; set; }
