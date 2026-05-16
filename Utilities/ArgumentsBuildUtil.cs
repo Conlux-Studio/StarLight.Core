@@ -41,7 +41,8 @@ public class ArgumentsBuildUtil
         _userType = "Mojang";
         _jarPath = GetVersionJarPath();
     }
-
+    
+    // TODO: 下个大版本私有
     public string VersionId { get; set; }
 
     public string Root { get; set; }
@@ -61,12 +62,13 @@ public class ArgumentsBuildUtil
     /// <returns></returns>
     public async Task<List<string>> Build()
     {
-        var arguments = new List<string>();
-
-        arguments.Add(BuildMemoryArgs());
-        arguments.Add(await BuildJvmArgs());
-        arguments.Add(BuildWindowArgs());
-        arguments.Add(BuildGameArgs());
+        var arguments = new List<string>
+        {
+            BuildMemoryArgs(),
+            await BuildJvmArgs(),
+            BuildWindowArgs(),
+            BuildGameArgs()
+        };
 
         return arguments;
     }
@@ -74,10 +76,11 @@ public class ArgumentsBuildUtil
     // 内存参数
     private string BuildMemoryArgs()
     {
-        var args = new List<string>();
-
-        args.Add("-Xmn" + JavaConfig.MinMemory + "M");
-        args.Add("-Xmx" + JavaConfig.MaxMemory + "M");
+        var args = new List<string>
+        {
+            "-Xmn" + JavaConfig.MinMemory + "M",
+            "-Xmx" + JavaConfig.MaxMemory + "M"
+        };
 
         return string.Join(" ", args);
     }
@@ -185,8 +188,6 @@ public class ArgumentsBuildUtil
             { "${classpath_separator}", ";" }
         };
 
-        var jvmArgumentTemplate = "";
-
         if (coreInfo.IsNewVersion)
         {
             BuildArgsData.JvmArgumentsTemplate.Clear();
@@ -204,7 +205,7 @@ public class ArgumentsBuildUtil
             BuildArgsData.JvmArgumentsTemplate = updatedJvmArguments;
         }
 
-        jvmArgumentTemplate = string.Join(" ", BuildArgsData.JvmArgumentsTemplate);
+        var jvmArgumentTemplate = string.Join(" ", BuildArgsData.JvmArgumentsTemplate);
 
         args.Add(ReplacePlaceholders(jvmArgumentTemplate, jvmPlaceholders));
 
@@ -216,14 +217,17 @@ public class ArgumentsBuildUtil
         if (!FileUtil.IsFile(wrapperPath))
         {
             var assembly = Assembly.GetExecutingAssembly();
-            string wrapper = "StarLight_Core.Assets.launch_wrapper.jar";
-            using Stream stream = assembly.GetManifestResourceStream(wrapper);
-            byte[] buffer = new byte[stream.Length];
-            stream.Read(buffer, 0, buffer.Length);
-            await File.WriteAllBytesAsync(wrapperPath, buffer);
+            const string wrapper = "StarLight_Core.Assets.launch_wrapper.jar";
+            await using var stream = assembly.GetManifestResourceStream(wrapper);
+    
+            if (stream == null)
+                throw new InvalidOperationException($"资源 '{wrapper}' 丢失");
+    
+            await using var fileStream = File.Create(wrapperPath);
+            await stream.CopyToAsync(fileStream);
         }
+        
         args.Add($"-Doolloo.jlw.tmpdir=\"{tempPath}\" -jar \"{wrapperPath}\"");
-
         args.Add(coreInfo.MainClass);
 
         return string.Join(" ", args);
@@ -235,7 +239,7 @@ public class ArgumentsBuildUtil
     }
 
     // 系统参数
-    private string BuildSystemArgs()
+    private static string BuildSystemArgs()
     {
         var args = new List<string>();
 

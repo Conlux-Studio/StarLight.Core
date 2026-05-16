@@ -4,6 +4,9 @@ using StarLight_Core.Models.Utilities;
 
 namespace StarLight_Core.Utilities;
 
+/// <summary>
+/// 游戏核心工具类
+/// </summary>
 public class GameCoreUtil
 {
     /// <summary>
@@ -36,7 +39,7 @@ public class GameCoreUtil
             try
             {
                 var jsonData = File.ReadAllText(versionFile);
-                var gameCore = JsonSerializer.Deserialize<GameCoreVersionsJson>(jsonData);
+                var gameCore = jsonData.ToJsonEntry<GameCoreVersionsJson>();
                 var gameCoreInfo = new GameCoreInfo();
 
                 if (gameCore != null)
@@ -72,15 +75,19 @@ public class GameCoreUtil
 
         return gameCores;
     }
-
-    // 获取指定版本的游戏核心信息
+    
+    /// <summary>
+    /// 获取指定版本的游戏核心信息
+    /// </summary>
+    /// <param name="versionId">版本名称</param>
+    /// <param name="root">游戏根目录</param>
+    /// <exception cref="Exception"></exception>
+    /// <returns>指定版本的游戏核心信息</returns>
     public static GameCoreInfo GetGameCore(string versionId, string root = ".minecraft")
     {
-        var rootPath = "null";
-
         FileUtil.IsDirectory(root, true);
 
-        rootPath = FileUtil.IsAbsolutePath(root)
+        var rootPath = FileUtil.IsAbsolutePath(root)
             ? Path.Combine(root, "versions")
             : Path.Combine(FileUtil.GetCurrentExecutingDirectory(), root, "versions");
 
