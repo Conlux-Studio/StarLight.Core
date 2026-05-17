@@ -19,7 +19,7 @@ public abstract class BaseAuthentication
     /// </summary>
     /// <param name="uuid"></param>
     /// <returns></returns>
-    protected static bool IsValidUuid(string uuid) => Guid.TryParseExact(uuid, "D", out _);
+    protected static bool IsValidUuid(string uuid) => Guid.TryParseExact(uuid, "D", out _) || Guid.TryParseExact(uuid, "N", out _);
     
     /// <summary>
     /// 生成 UUID
