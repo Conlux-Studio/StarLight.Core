@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using StarLight_Core.Models.Authentication;
+﻿using StarLight_Core.Models.Authentication;
 using StarLight_Core.Utilities;
 
 namespace StarLight_Core.Authentication;
@@ -21,7 +20,7 @@ public class YggdrasilAuthenticator : BaseAuthentication
         Url = "https://littleskin.cn/api/yggdrasil";
         Email = email;
         Password = password;
-        ClientToken = Guid.NewGuid().ToString("D");;
+        ClientToken = Guid.NewGuid().ToString("D");
     }
     
     /// <summary>
@@ -82,14 +81,13 @@ public class YggdrasilAuthenticator : BaseAuthentication
             }
         };
 
-        var baseUrl = string.IsNullOrEmpty(Url) ? "https://authserver.mojang.com" : Url;
+        var baseUrl = string.IsNullOrEmpty(Url) ? "https://littleskin.cn/api/yggdrasil" : Url;
         var requestUrl = $"{baseUrl}/authserver/authenticate";
 
         var postResponseContent =
-            await HttpUtil.SendHttpPostRequest(requestUrl, JsonSerializer.Serialize(requestJson), "application/json");
+            await HttpUtil.SendHttpPostRequest(requestUrl, requestJson.Serialize(), "application/json");
 
-        var accountMessage = JsonSerializer.Deserialize<YggdrasilResponse>(postResponseContent);
-
+        var accountMessage = postResponseContent.ToJsonEntry<YggdrasilResponse>();
         if (accountMessage != null)
             return accountMessage.UserAccounts.Select(userAccount => new YggdrasilAccount
                 {
@@ -97,12 +95,51 @@ public class YggdrasilAuthenticator : BaseAuthentication
                     ClientToken = accountMessage.ClientToken,
                     Name = userAccount.Name,
                     Uuid = Guid.Parse(userAccount.Uuid).ToString(),
-                    ServerUrl = Url ?? string.Empty,
-                    Email = Email ?? string.Empty,
-                    Password = Password ?? string.Empty
+                    ServerUrl = Url,
+                    Email = Email,
+                    Password = Password
                 })
                 .ToList();
         // TODO: 错误处理机制
         throw new InvalidOperationException();
+    }
+
+    /// <summary>
+    /// 异步刷新方法，用于刷新 AccessToken
+    /// </summary>
+    /// <param name="account">Yggdrasil 账户信息</param>
+    /// <returns>刷新后的 Yggdrasil 账号列表</returns>
+    /// <exception cref="InvalidOperationException">刷新失败时抛出，并包含服务器返回的错误信息</exception>
+    public async ValueTask<IEnumerable<YggdrasilAccount>> YggdrasilRefreshAsync(YggdrasilAccount account)
+    {
+        var requestJson = new
+        {
+            accessToken = account.AccessToken,
+            clientToken = account.ClientToken,
+            requestUser = false
+        };
+        
+        var baseUrl = string.IsNullOrEmpty(Url) ? "https://littleskin.cn/api/yggdrasil" : Url;
+        var requestUrl = $"{baseUrl}/authserver/refresh";
+        var postResponseContent = await HttpUtil.SendHttpPostRequest(requestUrl, requestJson.Serialize(), "application/json");
+        var refreshedResponse = postResponseContent.ToJsonEntry<YggdrasilResponse>();
+
+        if (refreshedResponse == null)
+        {
+            throw new InvalidOperationException("刷新失败：服务器返回的响应为空或无效");
+        }
+
+        // 5. 将响应数据映射到业务模型列表，处理方式与认证方法保持一致
+        return refreshedResponse.UserAccounts.Select(userAccount => new YggdrasilAccount
+            {
+                AccessToken = refreshedResponse.AccessToken,
+                ClientToken = refreshedResponse.ClientToken,
+                Name = userAccount.Name,
+                Uuid = Guid.Parse(userAccount.Uuid).ToString(),
+                ServerUrl = Url,
+                Email = Email,
+                Password = Password
+            })
+            .ToList();
     }
 }
