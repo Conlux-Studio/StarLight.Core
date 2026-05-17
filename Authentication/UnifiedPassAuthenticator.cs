@@ -67,9 +67,9 @@ public class UnifiedPassAuthenticator
         }
 
         var authResponse = JsonSerializer.Deserialize<UnifiedPassResponse>(response);
-
-        // 创建字典对象并返回
-        var result = new UnifiedPassAccount
+        if (authResponse == null) throw new InvalidOperationException();
+        
+        return new UnifiedPassAccount
         {
             Name = authResponse.SelectedProfile.Name,
             Uuid = authResponse.SelectedProfile.Uuid,
@@ -77,8 +77,6 @@ public class UnifiedPassAuthenticator
             ClientToken = authResponse.ClientToken,
             ServerId = ServerId
         };
-
-        return result;
     }
 
     /// <summary>
@@ -108,6 +106,8 @@ public class UnifiedPassAuthenticator
         }
 
         var authResponse = response.ToJsonEntry<UnifiedPassRefreshResponse>();
+        if (authResponse == null) throw new InvalidOperationException();
+        
         return new UnifiedPassAccount
         {
             Name = authResponse.SelectedProfile.Name,
@@ -125,24 +125,29 @@ public class UnifiedPassAuthenticator
     /// <param name="clientToken">客户端令牌</param>
     public static async Task InvalidateUnifiedPass(string accessToken, string clientToken)
     {
-        var InvalidatePostData = new
+        var invalidatePostData = new
         {
             accessToken,
             clientToken
         };
         
-        await HttpUtil.SendHttpPostRequest(UnifiedPassBaseUrl + "authserver/invalidate", InvalidatePostData.Serialize(), "application/json");
+        await HttpUtil.SendHttpPostRequest(UnifiedPassBaseUrl + "authserver/invalidate", invalidatePostData.Serialize(), "application/json");
     }
     
+    /// <summary>
+    /// 退出登录
+    /// </summary>
+    /// <param name="username">用户名</param>
+    /// <param name="password">密码</param>
     public static async Task SignOutUnifiedPass(string username, string password)
     {
-        var SignOutPostData = new
+        var signOutPostData = new
         {
             username,
             password
         };
         
-        await HttpUtil.SendHttpPostRequest(UnifiedPassBaseUrl + "authserver/signout", SignOutPostData.Serialize(), "application/json");
+        await HttpUtil.SendHttpPostRequest(UnifiedPassBaseUrl + "authserver/signout", signOutPostData.Serialize(), "application/json");
     }
 
     /// <summary>
