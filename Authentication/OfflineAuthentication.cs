@@ -17,8 +17,8 @@ public class OfflineAuthentication : BaseAuthentication
     /// <a href="https://wiki.conlux.studio/Authentication/Offline.html#构造函数">查看文档</a>
     public OfflineAuthentication(string username)
     {
-        AccessToken = Guid.NewGuid().ToString("N");
-        ClientToken = Guid.NewGuid().ToString("N");
+        AccessToken = Guid.NewGuid().ToString("D");
+        ClientToken = Guid.NewGuid().ToString("D");
         Name = username;
         Uuid = GenerateNameUuid(username);
     }
@@ -32,8 +32,8 @@ public class OfflineAuthentication : BaseAuthentication
     /// <a href="https://wiki.conlux.studio/Authentication/Offline.html#构造函数">查看文档</a>
     public OfflineAuthentication(string username, string uuid)
     {
-        AccessToken = Guid.NewGuid().ToString("N");
-        ClientToken = Guid.NewGuid().ToString("N");
+        AccessToken = Guid.NewGuid().ToString("D");
+        ClientToken = Guid.NewGuid().ToString("D");
         Name = username;
         Uuid = uuid;
     }
@@ -81,7 +81,7 @@ public class OfflineAuthentication : BaseAuthentication
     /// <a href="https://wiki.conlux.studio/Authentication/Offline.html#offlineauth-验证方法">查看文档</a>
     public OfflineAccount OfflineAuth()
     {
-        if (!IsValidUuid(Uuid)) Uuid = Guid.NewGuid().ToString("N");
+        if (!IsValidUuid(Uuid)) Uuid = Guid.NewGuid().ToString("D");
 
         var result = new OfflineAccount
         {
