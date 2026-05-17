@@ -15,5 +15,5 @@ public static class StarLightInfo
     /// <summary>
     /// 版本类型
     /// </summary>
-    public const StarlightCoreType Type = StarlightCoreType.Preview;
+    public const StarlightCoreType Type = StarlightCoreType.Release;
 }
