@@ -27,7 +27,7 @@ public class MicrosoftAuthentication
         ClientId = clientId;
     }
 
-    private static string[] Scopes => new[] { "XboxLive.signin", "offline_access", "openid", "profile", "email" };
+    private static string[] Scopes => ["XboxLive.signin", "offline_access", "openid", "profile", "email"];
 
     /// <summary>
     /// 客户端令牌
@@ -50,7 +50,7 @@ public class MicrosoftAuthentication
         const string deviceCodeUrl = "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode";
         var responseJson = await HttpUtil.SendHttpPostRequest(deviceCodeUrl, postData);
 
-        var responseDict = JsonSerializer.Deserialize<RetrieveDeviceCode>(responseJson);
+        var responseDict = responseJson.ToJsonEntry<RetrieveDeviceCode>();
 
         var resultDict = new RetrieveDeviceCode
         {
@@ -94,7 +94,7 @@ public class MicrosoftAuthentication
 
             if (tokenRes.IsSuccessStatusCode)
             {
-                var tokenData = JsonSerializer.Deserialize<GetTokenResponse>(tokenJson);
+                var tokenData = tokenJson.ToJsonEntry<GetTokenResponse>();
                 if (!string.IsNullOrEmpty(tokenData.AccessToken))
                     return new GetTokenResponse
                     {
@@ -123,30 +123,29 @@ public class MicrosoftAuthentication
     public async ValueTask<MicrosoftAccount> MicrosoftAuthAsync(GetTokenResponse tokenInfo, Action<string> action,
         string? refreshToken = null)
     {
+        if (refreshToken == null) return await GetMicrosoftAuthInfo(tokenInfo, action);
+        
         // 刷新令牌
-        if (refreshToken != null)
+        action("正在刷新令牌");
+
+        var refreshPostData = $"client_id={ClientId}&refresh_token={refreshToken}&grant_type=refresh_token";
+        string refreshResponse;
+
+        try
         {
-            action("正在刷新令牌");
-
-            var refreshPostData = $"client_id={ClientId}&refresh_token={refreshToken}&grant_type=refresh_token";
-            string refreshResponse;
-
-            try
-            {
-                refreshResponse = await HttpUtil.SendHttpPostRequest("https://login.live.com/oauth20_token.srf",
-                    refreshPostData);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("刷新令牌错误: " + e.Message);
-            }
-
-            var refreshResponseData = JsonSerializer.Deserialize<TokenResponse>(refreshResponse);
-
-            tokenInfo.AccessToken = refreshResponseData.AccessToken;
-            tokenInfo.RefreshToken = refreshResponseData.RefreshToken;
-            tokenInfo.ExpiresIn = refreshResponseData.ExpiresIn;
+            refreshResponse = await HttpUtil.SendHttpPostRequest("https://login.live.com/oauth20_token.srf",
+                refreshPostData);
         }
+        catch (Exception e)
+        {
+            throw new Exception("刷新令牌错误: " + e.Message);
+        }
+
+        var refreshResponseData = refreshResponse.ToJsonEntry<TokenResponse>();
+
+        tokenInfo.AccessToken = refreshResponseData.AccessToken;
+        tokenInfo.RefreshToken = refreshResponseData.RefreshToken;
+        tokenInfo.ExpiresIn = refreshResponseData.ExpiresIn;
 
         return await GetMicrosoftAuthInfo(tokenInfo, action);
     }
@@ -181,7 +180,7 @@ public class MicrosoftAuthentication
             TokenType = "JWT"
         };
 
-        var xblLoginContentString = JsonSerializer.Serialize(xboxLoginContent);
+        var xblLoginContentString = xboxLoginContent.Serialize();
 
         string xboxResponseString;
 
@@ -195,7 +194,7 @@ public class MicrosoftAuthentication
             throw new Exception("获取 XBL 令牌错误: " + e.Message);
         }
 
-        var xboxResponseData = JsonSerializer.Deserialize<XboxResponse>(xboxResponseString);
+        var xboxResponseData = xboxResponseString.ToJsonEntry<XboxResponse>();
         var xblAuthToken = xboxResponseData.AuthToken;
         var userHash = xboxResponseData.DisplayClaims.Xui[0].UserHash;
 
@@ -212,12 +211,12 @@ public class MicrosoftAuthentication
             TokenType = "JWT"
         };
 
-        var xstsPostData = JsonSerializer.Serialize(getXstsJsonData);
+        var xstsPostData = getXstsJsonData.Serialize();
 
         var xstsResponse = await HttpUtil.SendHttpPostRequest("https://xsts.auth.xboxlive.com/xsts/authorize",
             xstsPostData, "application/json");
 
-        var xstsResponseData = JsonSerializer.Deserialize<XboxResponse>(xstsResponse);
+        var xstsResponseData = xstsResponse.ToJsonEntry<XboxResponse>();
         var xstsToken = xstsResponseData.AuthToken;
 
         // Minecraft 身份验证
@@ -228,10 +227,10 @@ public class MicrosoftAuthentication
             identityToken = $"XBL3.0 x={userHash};{xstsToken}"
         };
 
-        var accountPostData = JsonSerializer.Serialize(accountResponseData);
+        var accountPostData = accountResponseData.Serialize();
 
         var accountResponse = await HttpUtil.SendHttpPostRequest(url, accountPostData, "application/json");
-        var accountData = JsonSerializer.Deserialize<MinecraftAccountData>(accountResponse);
+        var accountData = accountResponse.ToJsonEntry<MinecraftAccountData>();
         var accessToken = accountData.AccessToken;
 
         // 检查游戏所有权
@@ -246,7 +245,7 @@ public class MicrosoftAuthentication
         {
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            var gameAccountJsonData = JsonDocument.Parse(responseContent);
+            var gameAccountJsonData = responseContent.ToJsonDocument();
 
             if (gameAccountJsonData.RootElement.TryGetProperty("items", out var itemsArray))
                 ownTheGame = itemsArray.GetArrayLength() > 0;
@@ -267,9 +266,11 @@ public class MicrosoftAuthentication
 
         if (profileResponse.IsSuccessStatusCode) profileContent = await profileResponse.Content.ReadAsStringAsync();
 
-        var jsonObject = JsonDocument.Parse(profileContent);
+        var jsonObject = profileContent.ToJsonDocument();
 
-        var minecraftProfile = JsonSerializer.Deserialize<MinecraftProfile>(profileContent);
+        var minecraftProfile = profileContent.ToJsonEntry<MinecraftProfile>();
+        if (minecraftProfile == null) throw new Exception("验证失败");
+        
         var uuid = minecraftProfile.Uuid;
         var name = minecraftProfile.Name;
         var skinUrl = minecraftProfile.Skins[0].Url;
@@ -287,7 +288,6 @@ public class MicrosoftAuthentication
             DateTime = DateTime.Now
         };
 
-        throw new Exception("验证失败");
     }
 }
 #pragma warning restore CA1822
