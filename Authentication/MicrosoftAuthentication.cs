@@ -104,6 +104,31 @@ public class MicrosoftAuthentication
                         ClientId = deviceCodeInfo.ClientId
                     };
             }
+            else
+            {
+                // 先判断是否正在等待中，直接使用 Contains，避免额外解析开销
+                if (!tokenJson.Contains("authorization_pending"))
+                {
+                    try
+                    {
+                        var errorData = tokenJson.ToJsonEntry<GetTokenErrorResponse>();
+                        switch (errorData.Error)
+                        {
+                            case "authorization_declined":
+                                throw new Exception("用户拒绝了授权");
+                            case "bad_verification_code":
+                                throw new Exception("提交的 device_code 无效");
+                            case "expired_token":
+                                throw new TimeoutException("登录已超时,请重试"); // 避免轮询时正好过期导致抓不到异常
+                            // 实际上还有其他的错误类型，但按理说不会出现，比如 slow_down
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("轮询获取 Token 错误：" + e.Message);
+                    }
+                }
+            }
 
             await Task.Delay(pollingInterval);
         }
