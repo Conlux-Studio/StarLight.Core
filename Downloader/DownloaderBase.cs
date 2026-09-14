@@ -24,7 +24,7 @@ public class DownloaderBase
     /// <summary>
     /// 最大线程数
     /// </summary>
-    protected int MaxThreads { get; private set; } // 最大线程数
+    protected int MaxThreads { get; private set; }
 
     /// <summary>
     /// 获取下载文件大小

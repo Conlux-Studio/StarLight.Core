@@ -10,10 +10,10 @@ public static class StarLightInfo
     /// <summary>
     /// 版本号
     /// </summary>
-    public const string Version = "2.0.5";
+    public const string Version = "2.0.6";
 
     /// <summary>
     /// 版本类型
     /// </summary>
-    public const StarlightCoreType Type = StarlightCoreType.Release;
+    public const StarlightCoreType Type = StarlightCoreType.Preview;
 }

@@ -24,6 +24,12 @@ public class MinecraftLauncher
 
     public JavaConfig JavaConfig { get; set; }
 
+    // TODO: 更为完善统一的进度报告
+    /// <summary>
+    /// 启动游戏
+    /// </summary>
+    /// <param name="onProgressChanged">进度报告</param>
+    /// <returns></returns>
     public async Task<LaunchResponse> LaunchAsync(Action<ProgressReport> onProgressChanged)
     {
         var stopwatch = new Stopwatch();

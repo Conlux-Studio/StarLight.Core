@@ -28,6 +28,10 @@ public class SystemUtil
         return Environment.Is64BitOperatingSystem;
     }
 
+    /// <summary>
+    /// 获取操作系统位数
+    /// </summary>
+    /// <returns>操作系统位数</returns>
     public static int GetOperatingSystemBit()
     {
         return Environment.Is64BitOperatingSystem ? 64 : 32;

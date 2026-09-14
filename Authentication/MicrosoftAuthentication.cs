@@ -9,6 +9,7 @@ using StarLight_Core.Utilities;
 namespace StarLight_Core.Authentication;
 
 // TODO: 发生异常时输出请求返回内容
+// TODO: 规范涉及 OAuth2.0 的请求处理
 /// <summary>
 /// 微软验证类
 /// </summary>
